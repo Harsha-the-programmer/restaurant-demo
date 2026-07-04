@@ -44,11 +44,50 @@ Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `init`
 ---
 
 ## Repository State
-- **New repository** - no existing codebase
+- **Complete restaurant demo website** - "Ember & Spice" fine dining demo
 - **Location**: `/run/media/harsha/Shared/restaurant-demo`
 - **GitHub**: https://github.com/Harsha-the-programmer/restaurant-demo
 - **GitHub token**: Available in `.gh_token` (export as `GH_TOKEN`)
 - **AGENTS.md**: This file - update after every session
+
+### Tech Stack
+- React + Vite
+- Three.js / @react-three/fiber / @react-three/drei (3D elements)
+- GSAP + Framer Motion (animations)
+- Plain CSS (single index.css file)
+- react-scroll (smooth scrolling)
+
+### Project Structure
+```
+restaurant-demo/
+├── index.html
+├── package.json
+├── vite.config.js
+├── src/
+│   ├── main.jsx
+│   ├── App.jsx
+│   ├── index.css
+│   └── components/
+│       ├── Cursor.jsx
+│       ├── Navbar.jsx
+│       ├── Hero.jsx          ← Three.js canvas with wine glass + particles
+│       ├── About.jsx
+│       ├── Menu.jsx
+│       ├── Experience.jsx    ← Three.js floating orbit
+│       ├── Gallery.jsx
+│       ├── Reservation.jsx
+│       └── Footer.jsx
+```
+
+### Sections Built
+1. **Navbar** - Fixed, transparent → frosted glass on scroll, mobile menu
+2. **Hero** - Full viewport, 3D wine glass + particles, animated text, CTAs
+3. **About** - Quote, philosophy text, 3 stat cards
+4. **Menu** - 4 tabs (Starters/Mains/Desserts/Drinks), 3×2 card grid, hover animations
+5. **Experience** - 5 pillars + 3D floating orbit on right
+6. **Gallery** - 8 CSS gradient art cards, masonry grid, hover reveals
+7. **Reservation** - Form with validation, success state with checkmark animation
+8. **Footer** - Brand, nav, contact, hours, social links, copyright
 
 ---
 
