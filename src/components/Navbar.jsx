@@ -37,7 +37,7 @@ export default function Navbar() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '6rem',
+        gap: '12rem',
         padding: '0 var(--container-padding)',
         transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
         background: isScrolled ? 'rgba(13, 13, 13, 0.95)' : 'transparent',
