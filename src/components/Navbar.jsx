@@ -16,11 +16,11 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: 'About', href: '#about' },
-    { name: 'Menu', href: '#menu' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Gallery', href: '#gallery' },
-    { name: 'Reserve', href: '#reserve' },
+    { name: 'About', href: 'about' },
+    { name: 'Menu', href: 'menu' },
+    { name: 'Experience', href: 'experience' },
+    { name: 'Gallery', href: 'gallery' },
+    { name: 'Reserve', href: 'reserve' },
   ];
 
   return (
@@ -86,9 +86,8 @@ export default function Navbar() {
           display: 'flex',
           alignItems: 'center',
           gap: '3rem',
-          position: 'absolute',
-          left: '50%',
-          transform: 'translateX(-50%)',
+          marginLeft: 'auto',
+          marginRight: 'auto',
         }}
       >
         {navLinks.map((link) => (
