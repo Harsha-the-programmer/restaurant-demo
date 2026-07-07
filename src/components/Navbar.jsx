@@ -36,7 +36,8 @@ export default function Navbar() {
         height: 'var(--nav-height)',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
+        gap: '4rem',
         padding: '0 var(--container-padding)',
         transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
         background: isScrolled ? 'rgba(13, 13, 13, 0.95)' : 'transparent',
@@ -53,6 +54,8 @@ export default function Navbar() {
         style={{
           textDecoration: 'none',
           color: 'inherit',
+          cursor: 'pointer',
+          flexShrink: 0,
         }}
       >
         <div className="logo" style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
@@ -86,8 +89,7 @@ export default function Navbar() {
           display: 'flex',
           alignItems: 'center',
           gap: '3rem',
-          marginLeft: 'auto',
-          marginRight: 'auto',
+          flexShrink: 0,
         }}
       >
         {navLinks.map((link) => (
@@ -106,6 +108,7 @@ export default function Navbar() {
               color: 'var(--cream-muted)',
               transition: 'color 0.3s ease',
               position: 'relative',
+              cursor: 'pointer',
             }}
             onClick={() => setIsMobileMenuOpen(false)}
           >
@@ -146,6 +149,7 @@ export default function Navbar() {
           style={{
             padding: '0.75rem 1.5rem',
             fontSize: '0.75rem',
+            cursor: 'pointer',
           }}
         >
           Reserve a Table
@@ -226,6 +230,7 @@ export default function Navbar() {
                   textTransform: 'uppercase',
                   color: 'var(--cream)',
                   transition: 'color 0.3s ease',
+                  cursor: 'pointer',
                 }}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -242,6 +247,7 @@ export default function Navbar() {
               style={{
                 marginTop: '1rem',
                 padding: '1rem 3rem',
+                cursor: 'pointer',
               }}
               onClick={() => setIsMobileMenuOpen(false)}
             >

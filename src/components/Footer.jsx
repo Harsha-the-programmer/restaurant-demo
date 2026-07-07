@@ -87,7 +87,7 @@ export default function Footer() {
               to="home"
               smooth={true}
               duration={800}
-              style={{ textDecoration: 'none', color: 'inherit', display: 'inline-block', marginBottom: '1.5rem' }}
+              style={{ textDecoration: 'none', color: 'inherit', display: 'inline-block', marginBottom: '1.5rem', cursor: 'pointer' }}
             >
               <div className="footer-logo" style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
                 <span style={{
@@ -190,6 +190,7 @@ export default function Footer() {
                       color: 'var(--cream-muted)',
                       transition: 'color 0.3s ease',
                       position: 'relative',
+                      cursor: 'pointer',
                     }}
                   >
                     {link.name}
