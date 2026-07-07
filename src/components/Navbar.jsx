@@ -54,6 +54,7 @@ export default function Navbar() {
           textDecoration: 'none',
           color: 'inherit',
           cursor: 'pointer',
+          marginLeft: '2rem',
         }}
       >
         <div className="logo" style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
