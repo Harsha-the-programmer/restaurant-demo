@@ -36,8 +36,7 @@ export default function Navbar() {
         height: 'var(--nav-height)',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
-        gap: '12rem',
+        justifyContent: 'space-between',
         padding: '0 var(--container-padding)',
         transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
         background: isScrolled ? 'rgba(13, 13, 13, 0.95)' : 'transparent',
@@ -55,7 +54,6 @@ export default function Navbar() {
           textDecoration: 'none',
           color: 'inherit',
           cursor: 'pointer',
-          flexShrink: 0,
         }}
       >
         <div className="logo" style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
@@ -89,7 +87,8 @@ export default function Navbar() {
           display: 'flex',
           alignItems: 'center',
           gap: '3rem',
-          flexShrink: 0,
+          marginLeft: 'auto',
+          marginRight: 'auto',
         }}
       >
         {navLinks.map((link) => (
