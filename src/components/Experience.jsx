@@ -41,8 +41,8 @@ const pillars = [
 ];
 
 export default function Experience() {
-  const [activePillar, setActivePillar] = useState('tasting-menu');
-  const { setCurrentSection } = useStore();
+  const [activePillar, setLocalActivePillar] = useState('tasting-menu');
+  const { setCurrentSection, setActivePillar } = useStore();
 
   useEffect(() => {
     setCurrentSection('experience');
@@ -50,6 +50,7 @@ export default function Experience() {
   }, [setCurrentSection]);
 
   const handlePillarHover = (pillarId) => {
+    setLocalActivePillar(pillarId);
     setActivePillar(pillarId);
   };
 

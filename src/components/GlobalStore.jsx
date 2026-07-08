@@ -9,4 +9,6 @@ export const useStore = create((set) => ({
   setTimeOfDay: (tod) => set({ timeOfDay: tod }),
   reducedMotion: false,
   setReducedMotion: (val) => set({ reducedMotion: val }),
+  activePillar: 'tasting-menu',
+  setActivePillar: (pillar) => set({ activePillar: pillar }),
 }));

@@ -7,6 +7,9 @@ import { PostProcessing } from './PostProcessing';
 import { GlobalParticlesInstanced } from './GlobalParticlesInstanced';
 import { GlobalCamera } from './GlobalCamera';
 import { GodRays, VolumetricFog } from './VolumetricEffects';
+import { WineGlass } from './WineGlass';
+import { Caustics, CausticsSpotlight } from './Caustics';
+import { MorphingPillarModel } from './MorphingModels';
 import { useStore } from './GlobalStore';
 import { Suspense, useEffect, useMemo, useState, useRef } from 'react';
 
@@ -46,7 +49,7 @@ function GlobalEnvironment() {
     try {
       const loader = new RGBELoader();
       const url = HDRI_MAPS[preset];
-      const hdr = await new Promise((resolve, reject) => loader.load(url, resolve, undefined, undefined, reject));
+      const hdr = await new Promise((resolve, reject) => loader.load(url, resolve, undefined, reject));
       setHdri(hdr);
     } catch (e) {
       console.warn('HDRI load failed:', e);
@@ -64,23 +67,89 @@ function GlobalEnvironment() {
   return null;
 }
 
-function GlobalScene() {
-  const { currentSection, timeOfDay } = useStore();
-  
+function HeroContent() {
   return (
     <>
-      <GlobalEnvironment />
+      <ContactShadows 
+        opacity={0.4} 
+        scale={15} 
+        blur={2} 
+        far={15} 
+        position={[0, -0.5, 0]} 
+      />
+      <Caustics 
+        position={[0, -0.4, -0.5]} 
+        scale={20} 
+        intensity={1.5} 
+        color={0xffd700} 
+      />
+      <CausticsSpotlight 
+        position={[0, -0.4, 0]} 
+        scale={18} 
+        intensity={1.2} 
+        color={0xffd700} 
+      />
+      <WineGlass 
+        position={[0, -0.3, 0]} 
+        scale={1.2} 
+        rotationSpeed={0.12}
+        enableLiquid={true}
+        liquidLevel={0.65}
+      />
+      <GodRays timeOfDay="sunset" />
+    </>
+  );
+}
+
+function ExperienceContent({ activePillar }) {
+  return (
+    <>
       <ContactShadows 
         opacity={0.3} 
+        scale={10} 
+        blur={2} 
+        far={10} 
+        position={[0, -0.5, 0]} 
+        color="#000000"
+      />
+      <MorphingPillarModel 
+        pillarId={activePillar} 
+        isActive={true}
+      />
+      <GodRays timeOfDay="warehouse" />
+    </>
+  );
+}
+
+function OtherContent() {
+  return (
+    <>
+      <ContactShadows 
+        opacity={0.2} 
         scale={50} 
         blur={3} 
         far={20} 
         position={[0, -2, 0]} 
       />
+      <GodRays timeOfDay="studio" />
+    </>
+  );
+}
+
+function GlobalScene() {
+  const { currentSection, timeOfDay, activePillar } = useStore();
+  
+  return (
+    <>
+      <GlobalEnvironment />
       <VolumetricFog timeOfDay={timeOfDay} />
-      <GodRays timeOfDay={timeOfDay} />
       <GlobalParticlesInstanced />
       <GlobalCamera />
+      
+      {currentSection === 'home' && <HeroContent />}
+      {currentSection === 'experience' && <ExperienceContent activePillar={activePillar} />}
+      {currentSection !== 'home' && currentSection !== 'experience' && <OtherContent />}
+      
       <PostProcessing intensity={1.0} enableDOF={true} enableSSAO={true} enableBloom={true} />
     </>
   );
