@@ -4,8 +4,9 @@ import { useLoader } from '@react-three/fiber';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import * as THREE from 'three';
 import { PostProcessing } from './PostProcessing';
-import { GlobalParticles } from './GlobalParticles';
+import { GlobalParticlesInstanced } from './GlobalParticlesInstanced';
 import { GlobalCamera } from './GlobalCamera';
+import { GodRays, VolumetricFog } from './VolumetricEffects';
 import { useStore } from './GlobalStore';
 import { Suspense, useEffect, useMemo, useState, useRef } from 'react';
 
@@ -45,7 +46,7 @@ function GlobalEnvironment() {
     try {
       const loader = new RGBELoader();
       const url = HDRI_MAPS[preset];
-      const hdr = await new Promise((resolve, reject) => loader.load(url, resolve, undefined, reject));
+      const hdr = await new Promise((resolve, reject) => loader.load(url, resolve, undefined, undefined, reject));
       setHdri(hdr);
     } catch (e) {
       console.warn('HDRI load failed:', e);
@@ -64,6 +65,8 @@ function GlobalEnvironment() {
 }
 
 function GlobalScene() {
+  const { currentSection, timeOfDay } = useStore();
+  
   return (
     <>
       <GlobalEnvironment />
@@ -74,7 +77,9 @@ function GlobalScene() {
         far={20} 
         position={[0, -2, 0]} 
       />
-      <GlobalParticles />
+      <VolumetricFog timeOfDay={timeOfDay} />
+      <GodRays timeOfDay={timeOfDay} />
+      <GlobalParticlesInstanced />
       <GlobalCamera />
       <PostProcessing intensity={1.0} enableDOF={true} enableSSAO={true} enableBloom={true} />
     </>

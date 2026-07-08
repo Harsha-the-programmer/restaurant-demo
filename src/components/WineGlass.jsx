@@ -1,6 +1,6 @@
-import { useFrame, useThree } from '@react-three/fiber';
+import { useRef, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
-import { useRef } from 'react';
+import { useMemo } from 'react';
 import * as THREE from 'three';
 
 export function WineGlass({ 
@@ -65,12 +65,6 @@ export function WineGlass({
                 metalness={0.3}
                 roughness={0.15}
                 transmission={0.95}
-                thickness={0.5}
-                ior={1.5}
-                transparent
-                opacity={0.25}
-                envMapIntensity={1.5}
-                clearcoat={1.0}
                 clearcoatRoughness={0.05}
               />
             </mesh>
