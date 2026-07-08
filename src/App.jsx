@@ -8,6 +8,7 @@ import Gallery from './components/Gallery';
 import Reservation from './components/Reservation';
 import Footer from './components/Footer';
 import Cursor from './components/Cursor';
+import { GlobalCanvas } from './components/GlobalCanvas';
 
 function App() {
   useEffect(() => {
@@ -30,6 +31,7 @@ function App() {
 
   return (
     <>
+      <GlobalCanvas />
       <Cursor />
       <Navbar />
       <main style={{ paddingTop: 'var(--nav-height)' }}>

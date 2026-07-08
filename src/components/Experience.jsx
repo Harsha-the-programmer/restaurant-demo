@@ -1,13 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { ContactShadows } from '@react-three/drei';
-import * as THREE from 'three';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { PostProcessing } from './PostProcessing';
-import { ExperienceCamera } from './CameraRig';
-import { GoldParticles, AmbientDust } from './Particles';
-import { ExperienceEnvironment } from './Environment';
-import { MorphingPillarModel } from './MorphingModels';
+import { useStore } from './GlobalStore';
 
 const pillars = [
   { 
@@ -47,113 +40,16 @@ const pillars = [
   },
 ];
 
-function ExperienceCanvas({ activePillar }) {
-  const { viewport } = useThree();
-  const isMobile = viewport.width < 768;
-  const timeRef = useRef(0);
-
-  useFrame((_, delta) => {
-    timeRef.current += delta;
-  });
-
-  return (
-    <Canvas
-      camera={{ position: [0, 1, 6], fov: 45 }}
-      gl={{ 
-        antialias: true, 
-        alpha: true, 
-        preserveDrawingBuffer: false,
-        powerPreference: 'high-performance',
-      }}
-      shadows={{ 
-        type: THREE.PCFSoftShadowMap,
-        autoUpdate: false,
-        needsUpdate: true,
-      }}
-      toneMapping={THREE.ACESFilmicToneMapping}
-      toneMappingExposure={1.1}
-      colorSpace={THREE.SRGBColorSpace}
-      dpr={[1, 2]}
-      style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
-    >
-      <ExperienceEnvironment />
-      
-      <ContactShadows 
-        opacity={0.3} 
-        scale={10} 
-        blur={2} 
-        far={10} 
-        color="#000000"
-      />
-      
-      <ambientLight color={0xffeedd} intensity={0.5} />
-      <directionalLight 
-        position={[5, 10, 5]} 
-        color={0xfff8e7} 
-        intensity={1.5} 
-        castShadow
-        shadow-mapSize={2048}
-        shadow-camera-near={0.1}
-        shadow-camera-far={20}
-        shadow-camera-left={-10}
-        shadow-camera-right={10}
-        shadow-camera-top={10}
-        shadow-camera-bottom={-10}
-      />
-      <directionalLight 
-        position={[-5, 5, -5]} 
-        color={0xc9a84c} 
-        intensity={0.8} 
-      />
-      <pointLight 
-        position={[-3, 3, 3]} 
-        color={0xc9a84c} 
-        intensity={1} 
-        distance={15} 
-        decay={2} 
-        castShadow
-        shadow-mapSize={1024}
-      />
-      
-      <GoldParticles 
-        count={isMobile ? 800 : 2000} 
-        radius={12}
-        speed={0.015}
-        size={0.03}
-        color={0xc9a84c}
-        opacity={0.5}
-        enableTurbulence={true}
-      />
-      
-      <AmbientDust 
-        count={isMobile ? 500 : 1500} 
-        radius={15}
-        color={0xe8c97a}
-        opacity={0.2}
-      />
-      
-      <MorphingPillarModel 
-        pillarId={activePillar} 
-        isActive={true}
-      />
-      
-      <PostProcessing 
-        intensity={1.0}
-        enableDOF={true}
-        enableSSAO={true}
-        enableBloom={true}
-        enableChromaticAberration={false}
-      />
-    </Canvas>
-  );
-}
-
 export default function Experience() {
   const [activePillar, setActivePillar] = useState('tasting-menu');
-  const [hoveredPillar, setHoveredPillar] = useState(null);
+  const { setCurrentSection } = useStore();
+
+  useEffect(() => {
+    setCurrentSection('experience');
+    return () => setCurrentSection('home');
+  }, [setCurrentSection]);
 
   const handlePillarHover = (pillarId) => {
-    setHoveredPillar(pillarId);
     setActivePillar(pillarId);
   };
 
@@ -206,7 +102,6 @@ export default function Experience() {
                   transition: 'opacity 0.4s ease',
                 }}
                 onMouseEnter={() => handlePillarHover(pillar.id)}
-                onMouseLeave={() => setHoveredPillar(null)}
               >
                 <motion.div
                   className="pillar-icon"
@@ -260,15 +155,23 @@ export default function Experience() {
               margin: '0 auto',
             }}
           >
-            <ExperienceCanvas activePillar={activePillar} />
-            <ExperienceCamera 
-              position={[0, 1, 6]} 
-              target={[0, 0, 0]}
-              fov={45}
-              enableControls={false}
-              enableAutoRotate={true}
-              autoRotateSpeed={0.2}
-            />
+            <div 
+              id="experience-3d-placeholder"
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--gold)',
+                fontSize: '1.5rem',
+                border: '1px solid var(--charcoal-border)',
+                borderRadius: '16px',
+                background: 'linear-gradient(135deg, rgba(201, 168, 76, 0.05) 0%, transparent 100%)',
+              }}
+            >
+              3D Content Rendered in Global Canvas
+            </div>
             <style jsx global>{`
               @keyframes pulse {
                 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }

@@ -1,102 +1,5 @@
-import { useRef, useEffect, useState, Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { PostProcessing } from './PostProcessing';
-import { HeroEnvironment } from './Environment';
-import { HeroCamera, ScrollCamera } from './CameraRig';
-import { WineGlass } from './WineGlass';
-import { GoldParticles, AmbientDust } from './Particles';
-import { ContactShadows } from '@react-three/drei';
-import { Caustics, CausticsSpotlight } from './Caustics';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import * as THREE from 'three';
-
-function HeroCanvas() {
-  return (
-    <Canvas
-      camera={{ position: [0, 0.5, 8], fov: 35 }}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: -1,
-        pointerEvents: 'none',
-      }}
-      gl={{ 
-        antialias: true, 
-        alpha: true, 
-        preserveDrawingBuffer: false,
-        powerPreference: 'high-performance',
-        logarithmicDepthBuffer: true,
-        stencil: false,
-      }}
-      shadows={{ 
-        type: THREE.PCFSoftShadowMap,
-        autoUpdate: false,
-        needsUpdate: true,
-      }}
-      toneMapping={THREE.ACESFilmicToneMapping}
-      toneMappingExposure={1.15}
-      colorSpace={THREE.SRGBColorSpace}
-      dpr={[1, 2]}
-    >
-      <Suspense fallback={null}>
-        <HeroEnvironment />
-      </Suspense>
-      
-      <ContactShadows 
-        opacity={0.3} 
-        scale={10} 
-        blur={2} 
-        far={10} 
-        position={[0, -0.5, 0]} 
-      />
-      
-      <HeroCamera position={[0, 0.5, 8]} target={[0, 0.5, 0]} focusDistance={8} />
-      <ScrollCamera 
-        trigger="#home" 
-        startPosition={[0, 0.5, 8]} 
-        endPosition={[2, 1.5, 10]} 
-        startRotation={[0, 0, 0]} 
-        endRotation={[-0.1, -0.2, 0]} 
-        scrub={1} 
-      />
-      
-      <AmbientDust count={1500} radius={25} color={0xe8c97a} opacity={0.25} />
-      <GoldParticles count={2500} radius={18} speed={0.015} size={0.035} color={0xc9a84c} opacity={0.5} />
-      
-      <Caustics 
-        position={[0, -0.4, -0.5]} 
-        scale={20} 
-        intensity={1.5} 
-        color={0xffd700} 
-      />
-      <CausticsSpotlight 
-        position={[0, -0.4, 0]} 
-        scale={18} 
-        intensity={1.2} 
-        color={0xffd700} 
-      />
-      
-      <WineGlass 
-        position={[0, -0.3, 0]} 
-        scale={1.2} 
-        rotationSpeed={0.12}
-        enableLiquid={true}
-        liquidLevel={0.65}
-      />
-      
-      <PostProcessing 
-        intensity={1.0} 
-        enableDOF={true} 
-        enableSSAO={true}
-        enableBloom={true}
-        enableChromaticAberration={false}
-      />
-    </Canvas>
-  );
-}
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
@@ -120,8 +23,6 @@ export default function Hero() {
         overflow: 'hidden',
       }}
     >
-      <HeroCanvas />
-
       <div
         className="hero-overlay"
         style={{
