@@ -99,9 +99,19 @@ import { useRef } from 'react';  // Required for useRef in FloatingOrbit
 ### Font Loading
 `index.html` loads Google Fonts: Playfair Display, Cormorant Garamond, DM Sans. CSS uses `--font-display: 'Playfair Display'` - ensure font is loaded.
 
----
+### Navbar/Foofer Links Fix
+- React Scroll `Link` components require element IDs **without** `#` prefix
+- Fixed in Navbar.jsx and Footer.jsx: `to="about"` not `to="#about"`
 
-## Session Workflow
+### Navbar Layout
+- Use `justifyContent: 'space-between'` with `marginLeft: 'auto'; marginRight: 'auto'` on nav-links for centered navigation
+- Added `cursor: 'pointer'` to all Link components for proper hover cursor
+
+### Gallery Images
+- Added Unsplash images to all 8 gallery items
+- Added hover scale effect on images (1.08x)
+
+### Session Workflow
 1. `export GH_TOKEN=$(cat .gh_token | cut -d'=' -f2)`
 2. Make changes
 3. `git add -A && git commit -m "type: description"`
