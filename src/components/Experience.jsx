@@ -1,12 +1,13 @@
-import { useRef, useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Html, ContactShadows, Environment } from '@react-three/drei';
+import { ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
 import { PostProcessing } from './PostProcessing';
 import { ExperienceCamera } from './CameraRig';
 import { GoldParticles, AmbientDust } from './Particles';
 import { ExperienceEnvironment } from './Environment';
+import { MorphingPillarModel } from './MorphingModels';
 
 const pillars = [
   { 
@@ -46,178 +47,14 @@ const pillars = [
   },
 ];
 
-const pillarModels = {
-  'tasting-menu': { 
-    geometry: 'torusKnot', 
-    args: [0.8, 0.25, 64, 16, 2, 3],
-    color: 0xc9a84c,
-    metalness: 0.7,
-    roughness: 0.2,
-    emissive: 0x8b6914,
-    emissiveIntensity: 0.3,
-  },
-  'music': { 
-    geometry: 'icosahedron', 
-    args: [1, 1],
-    color: 0xe8c97a,
-    metalness: 0.5,
-    roughness: 0.3,
-    emissive: 0xc9a84c,
-    emissiveIntensity: 0.2,
-  },
-  'wine': { 
-    geometry: 'cylinder', 
-    args: [0.3, 0.3, 2.5, 32],
-    color: 0x4a1a0a,
-    metalness: 0.1,
-    roughness: 0.2,
-    transmission: 0.9,
-    thickness: 1.5,
-    ior: 1.5,
-    transparent: true,
-    opacity: 0.7,
-  },
-  'kitchen': { 
-    geometry: 'box', 
-    args: [1.2, 0.8, 1.2],
-    color: 0xc9a84c,
-    metalness: 0.6,
-    roughness: 0.3,
-    emissive: 0x8b6914,
-    emissiveIntensity: 0.25,
-  },
-  'farm': { 
-    geometry: 'sphere', 
-    args: [0.9, 32, 32],
-    color: 0x8b6914,
-    metalness: 0.2,
-    roughness: 0.6,
-  },
-};
-
-function PillarModel({ type, isActive = false, rotationSpeed = 0.08 }) {
-  const modelRef = useRef();
-  const timeRef = useRef(0);
-  const config = pillarModels[type] || pillarModels['tasting-menu'];
-
-  useFrame((state, delta) => {
-    timeRef.current += delta;
-    if (modelRef.current) {
-      modelRef.current.rotation.y += delta * rotationSpeed;
-      modelRef.current.rotation.x = Math.sin(timeRef.current * 0.3) * 0.1;
-      modelRef.current.position.y = Math.sin(timeRef.current * 0.5) * (isActive ? 0.15 : 0.05);
-      
-      if (isActive) {
-        modelRef.current.scale.setScalar(1 + Math.sin(timeRef.current * 2) * 0.02);
-      } else {
-        modelRef.current.scale.setScalar(1);
-      }
-    }
-  });
-
-  const isMobile = useThree((state) => state.viewport.width < 768);
-  const scale = isMobile ? 0.5 : 1;
-
-  const commonProps = {
-    ref: modelRef,
-    scale,
-    castShadow: true,
-    receiveShadow: true,
-  };
-
-  return (
-    <group {...commonProps} rotation={[-Math.PI / 2, 0, 0]}>
-      {config.geometry === 'torusKnot' && (
-        <mesh>
-          <torusKnotGeometry args={config.args} />
-          <meshPhysicalMaterial
-            color={config.color}
-            metalness={config.metalness}
-            roughness={config.roughness}
-            emissive={config.emissive}
-            emissiveIntensity={config.emissiveIntensity}
-            clearcoat={1.0}
-            clearcoatRoughness={0.1}
-            envMapIntensity={1.5}
-          />
-        </mesh>
-      )}
-      {config.geometry === 'icosahedron' && (
-        <mesh>
-          <icosahedronGeometry args={config.args} />
-          <meshPhysicalMaterial
-            color={config.color}
-            metalness={config.metalness}
-            roughness={config.roughness}
-            emissive={config.emissive}
-            emissiveIntensity={config.emissiveIntensity}
-            wireframe
-            transparent
-            opacity={0.5}
-            envMapIntensity={1.0}
-          />
-        </mesh>
-      )}
-      {config.geometry === 'cylinder' && (
-        <mesh>
-          <cylinderGeometry args={config.args} />
-          <meshPhysicalMaterial
-            color={config.color}
-            metalness={config.metalness}
-            roughness={config.roughness}
-            transmission={config.transmission}
-            thickness={config.thickness}
-            ior={config.ior}
-            transparent={config.transparent}
-            opacity={config.opacity}
-            envMapIntensity={2.0}
-            clearcoat={1.0}
-            clearcoatRoughness={0.05}
-          />
-        </mesh>
-      )}
-      {config.geometry === 'box' && (
-        <mesh>
-          <boxGeometry args={config.args} />
-          <meshPhysicalMaterial
-            color={config.color}
-            metalness={config.metalness}
-            roughness={config.roughness}
-            emissive={config.emissive}
-            emissiveIntensity={config.emissiveIntensity}
-            envMapIntensity={1.5}
-            clearcoat={0.5}
-            clearcoatRoughness={0.2}
-          />
-        </mesh>
-      )}
-      {config.geometry === 'sphere' && (
-        <mesh>
-          <sphereGeometry args={config.args} />
-          <meshPhysicalMaterial
-            color={config.color}
-            metalness={config.metalness}
-            roughness={config.roughness}
-            envMapIntensity={1.0}
-          />
-        </mesh>
-      )}
-      <pointLight
-        position={[0, 2, 0]}
-        color={config.color}
-        intensity={isActive ? 2 : 0.5}
-        distance={8}
-        decay={2}
-        castShadow
-        shadow-mapSize={512}
-      />
-    </group>
-  );
-}
-
 function ExperienceCanvas({ activePillar }) {
   const { viewport } = useThree();
   const isMobile = viewport.width < 768;
+  const timeRef = useRef(0);
+
+  useFrame((_, delta) => {
+    timeRef.current += delta;
+  });
 
   return (
     <Canvas
@@ -295,10 +132,9 @@ function ExperienceCanvas({ activePillar }) {
         opacity={0.2}
       />
       
-      <PillarModel 
-        type={activePillar} 
+      <MorphingPillarModel 
+        pillarId={activePillar} 
         isActive={true}
-        rotationSpeed={0.06}
       />
       
       <PostProcessing 
