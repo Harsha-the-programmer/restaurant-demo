@@ -1,134 +1,326 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Html } from '@react-three/drei';
+import { Html, ContactShadows, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
+import { PostProcessing } from './PostProcessing';
+import { ExperienceCamera } from './CameraRig';
+import { GoldParticles, AmbientDust } from './Particles';
+import { ExperienceEnvironment } from './Environment';
 
 const pillars = [
-  { icon: '🍽', title: 'Curated Tasting Menus', desc: 'Multi-course journeys designed by our executive chef, changing seasonally to showcase the finest ingredients.' },
-  { icon: '🎵', title: 'Live Music on Weekends', desc: 'Classical Indian and contemporary fusion performances every Friday and Saturday evening from 8 PM.' },
-  { icon: '🍷', title: 'Imported Wine Selection', desc: 'Over 200 labels from Bordeaux, Napa, Tuscany, and emerging Indian vineyards, curated by our sommelier.' },
-  { icon: '👨‍🍳', title: 'Open Kitchen Experience', desc: 'Watch culinary mastery unfold at our chef\'s counter — interactive dining with front-row seats to the action.' },
-  { icon: '🌿', title: 'Farm-to-Table Sourcing', desc: 'Direct partnerships with organic farms across Karnataka and Maharashtra, ensuring peak freshness daily.' },
+  { 
+    id: 'tasting', 
+    icon: '🍽', 
+    title: 'Curated Tasting Menus', 
+    desc: 'Multi-course journeys designed by our executive chef, changing seasonally to showcase the finest ingredients.',
+    model: 'tasting-menu'
+  },
+  { 
+    id: 'music', 
+    icon: '🎵', 
+    title: 'Live Music on Weekends', 
+    desc: 'Classical Indian and contemporary fusion performances every Friday and Saturday evening from 8 PM.',
+    model: 'music'
+  },
+  { 
+    id: 'wine', 
+    icon: '🍷', 
+    title: 'Imported Wine Selection', 
+    desc: 'Over 200 labels from Bordeaux, Napa, Tuscany, and emerging Indian vineyards, curated by our sommelier.',
+    model: 'wine'
+  },
+  { 
+    id: 'kitchen', 
+    icon: '👨‍🍳', 
+    title: 'Open Kitchen Experience', 
+    desc: 'Watch culinary mastery unfold at our chef\'s counter — interactive dining with front-row seats to the action.',
+    model: 'kitchen'
+  },
+  { 
+    id: 'farm', 
+    icon: '🌿', 
+    title: 'Farm-to-Table Sourcing', 
+    desc: 'Direct partnerships with organic farms across Karnataka and Maharashtra, ensuring peak freshness daily.',
+    model: 'farm'
+  },
 ];
 
-function FloatingOrbit() {
-  const { viewport } = useThree();
-  const groupRef = useRef();
+const pillarModels = {
+  'tasting-menu': { 
+    geometry: 'torusKnot', 
+    args: [0.8, 0.25, 64, 16, 2, 3],
+    color: 0xc9a84c,
+    metalness: 0.7,
+    roughness: 0.2,
+    emissive: 0x8b6914,
+    emissiveIntensity: 0.3,
+  },
+  'music': { 
+    geometry: 'icosahedron', 
+    args: [1, 1],
+    color: 0xe8c97a,
+    metalness: 0.5,
+    roughness: 0.3,
+    emissive: 0xc9a84c,
+    emissiveIntensity: 0.2,
+  },
+  'wine': { 
+    geometry: 'cylinder', 
+    args: [0.3, 0.3, 2.5, 32],
+    color: 0x4a1a0a,
+    metalness: 0.1,
+    roughness: 0.2,
+    transmission: 0.9,
+    thickness: 1.5,
+    ior: 1.5,
+    transparent: true,
+    opacity: 0.7,
+  },
+  'kitchen': { 
+    geometry: 'box', 
+    args: [1.2, 0.8, 1.2],
+    color: 0xc9a84c,
+    metalness: 0.6,
+    roughness: 0.3,
+    emissive: 0x8b6914,
+    emissiveIntensity: 0.25,
+  },
+  'farm': { 
+    geometry: 'sphere', 
+    args: [0.9, 32, 32],
+    color: 0x8b6914,
+    metalness: 0.2,
+    roughness: 0.6,
+  },
+};
+
+function PillarModel({ type, isActive = false, rotationSpeed = 0.08 }) {
+  const modelRef = useRef();
   const timeRef = useRef(0);
+  const config = pillarModels[type] || pillarModels['tasting-menu'];
 
   useFrame((state, delta) => {
     timeRef.current += delta;
-    if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.08;
-      groupRef.current.rotation.x = Math.sin(timeRef.current * 0.3) * 0.15;
+    if (modelRef.current) {
+      modelRef.current.rotation.y += delta * rotationSpeed;
+      modelRef.current.rotation.x = Math.sin(timeRef.current * 0.3) * 0.1;
+      modelRef.current.position.y = Math.sin(timeRef.current * 0.5) * (isActive ? 0.15 : 0.05);
+      
+      if (isActive) {
+        modelRef.current.scale.setScalar(1 + Math.sin(timeRef.current * 2) * 0.02);
+      } else {
+        modelRef.current.scale.setScalar(1);
+      }
     }
   });
 
-  const isMobile = viewport.width < 768;
+  const isMobile = useThree((state) => state.viewport.width < 768);
   const scale = isMobile ? 0.5 : 1;
 
+  const commonProps = {
+    ref: modelRef,
+    scale,
+    castShadow: true,
+    receiveShadow: true,
+  };
+
   return (
-    <group ref={groupRef} scale={scale}>
-      <group rotation={[-Math.PI / 2, 0, 0]}>
+    <group {...commonProps} rotation={[-Math.PI / 2, 0, 0]}>
+      {config.geometry === 'torusKnot' && (
         <mesh>
-          <torusGeometry args={[1.8, 0.02, 16, 100]} />
+          <torusKnotGeometry args={config.args} />
           <meshPhysicalMaterial
-            color={0xc9a84c}
-            metalness={0.9}
-            roughness={0.1}
-            emissive={0x8b6914}
-            emissiveIntensity={0.4}
+            color={config.color}
+            metalness={config.metalness}
+            roughness={config.roughness}
+            emissive={config.emissive}
+            emissiveIntensity={config.emissiveIntensity}
+            clearcoat={1.0}
+            clearcoatRoughness={0.1}
+            envMapIntensity={1.5}
+          />
+        </mesh>
+      )}
+      {config.geometry === 'icosahedron' && (
+        <mesh>
+          <icosahedronGeometry args={config.args} />
+          <meshPhysicalMaterial
+            color={config.color}
+            metalness={config.metalness}
+            roughness={config.roughness}
+            emissive={config.emissive}
+            emissiveIntensity={config.emissiveIntensity}
             wireframe
             transparent
-            opacity={0.6}
+            opacity={0.5}
+            envMapIntensity={1.0}
           />
         </mesh>
+      )}
+      {config.geometry === 'cylinder' && (
         <mesh>
-          <sphereGeometry args={[0.6, 32, 32]} />
+          <cylinderGeometry args={config.args} />
           <meshPhysicalMaterial
-            color={0xc9a84c}
-            metalness={0.3}
-            roughness={0.2}
-            transmission={0.9}
-            thickness={0.5}
-            ior={1.5}
-            transparent
-            opacity={0.15}
+            color={config.color}
+            metalness={config.metalness}
+            roughness={config.roughness}
+            transmission={config.transmission}
+            thickness={config.thickness}
+            ior={config.ior}
+            transparent={config.transparent}
+            opacity={config.opacity}
+            envMapIntensity={2.0}
+            clearcoat={1.0}
+            clearcoatRoughness={0.05}
           />
         </mesh>
+      )}
+      {config.geometry === 'box' && (
         <mesh>
-          <icosahedronGeometry args={[1.2, 0]} />
-          <meshBasicMaterial
-            color={0xe8c97a}
-            wireframe
-            transparent
-            opacity={0.3}
+          <boxGeometry args={config.args} />
+          <meshPhysicalMaterial
+            color={config.color}
+            metalness={config.metalness}
+            roughness={config.roughness}
+            emissive={config.emissive}
+            emissiveIntensity={config.emissiveIntensity}
+            envMapIntensity={1.5}
+            clearcoat={0.5}
+            clearcoatRoughness={0.2}
           />
         </mesh>
-      </group>
-
-      <Html
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          pointerEvents: 'none',
-        }}
-        transform
-        scaleFactor={1 / scale}
-      >
-        <div style={{
-          width: '120px',
-          height: '120px',
-          border: '1px solid var(--gold)',
-          borderRadius: '50%',
-          opacity: 0.3,
-          animation: 'pulse 3s ease-in-out infinite',
-        }} />
-      </Html>
-
-      <Html
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          pointerEvents: 'none',
-        }}
-        transform
-        scaleFactor={1 / scale}
-      >
-        <div style={{
-          width: '60px',
-          height: '60px',
-          border: '1px solid var(--gold-light)',
-          borderRadius: '50%',
-          opacity: 0.2,
-          animation: 'pulse 4s ease-in-out infinite reverse',
-        }} />
-      </Html>
+      )}
+      {config.geometry === 'sphere' && (
+        <mesh>
+          <sphereGeometry args={config.args} />
+          <meshPhysicalMaterial
+            color={config.color}
+            metalness={config.metalness}
+            roughness={config.roughness}
+            envMapIntensity={1.0}
+          />
+        </mesh>
+      )}
+      <pointLight
+        position={[0, 2, 0]}
+        color={config.color}
+        intensity={isActive ? 2 : 0.5}
+        distance={8}
+        decay={2}
+        castShadow
+        shadow-mapSize={512}
+      />
     </group>
   );
 }
 
-function ExperienceCanvas() {
+function ExperienceCanvas({ activePillar }) {
+  const { viewport } = useThree();
+  const isMobile = viewport.width < 768;
+
   return (
     <Canvas
-      camera={{ position: [0, 0, 6], fov: 45 }}
-      gl={{ antialias: true, alpha: true, preserveDrawingBuffer: false }}
+      camera={{ position: [0, 1, 6], fov: 45 }}
+      gl={{ 
+        antialias: true, 
+        alpha: true, 
+        preserveDrawingBuffer: false,
+        powerPreference: 'high-performance',
+      }}
+      shadows={{ 
+        type: THREE.PCFSoftShadowMap,
+        autoUpdate: false,
+        needsUpdate: true,
+      }}
+      toneMapping={THREE.ACESFilmicToneMapping}
+      toneMappingExposure={1.1}
+      colorSpace={THREE.SRGBColorSpace}
+      dpr={[1, 2]}
       style={{ width: '100%', height: '100%', pointerEvents: 'none' }}
     >
-      <ambientLight color={0xc9a84c} intensity={0.3} />
-      <directionalLight position={[3, 5, 3]} color={0xffeedd} intensity={0.8} />
-      <pointLight position={[-2, 2, 2]} color={0xc9a84c} intensity={0.5} distance={10} decay={2} />
-      <FloatingOrbit />
+      <ExperienceEnvironment />
+      
+      <ContactShadows 
+        opacity={0.3} 
+        scale={10} 
+        blur={2} 
+        far={10} 
+        color="#000000"
+      />
+      
+      <ambientLight color={0xffeedd} intensity={0.5} />
+      <directionalLight 
+        position={[5, 10, 5]} 
+        color={0xfff8e7} 
+        intensity={1.5} 
+        castShadow
+        shadow-mapSize={2048}
+        shadow-camera-near={0.1}
+        shadow-camera-far={20}
+        shadow-camera-left={-10}
+        shadow-camera-right={10}
+        shadow-camera-top={10}
+        shadow-camera-bottom={-10}
+      />
+      <directionalLight 
+        position={[-5, 5, -5]} 
+        color={0xc9a84c} 
+        intensity={0.8} 
+      />
+      <pointLight 
+        position={[-3, 3, 3]} 
+        color={0xc9a84c} 
+        intensity={1} 
+        distance={15} 
+        decay={2} 
+        castShadow
+        shadow-mapSize={1024}
+      />
+      
+      <GoldParticles 
+        count={isMobile ? 800 : 2000} 
+        radius={12}
+        speed={0.015}
+        size={0.03}
+        color={0xc9a84c}
+        opacity={0.5}
+        enableTurbulence={true}
+      />
+      
+      <AmbientDust 
+        count={isMobile ? 500 : 1500} 
+        radius={15}
+        color={0xe8c97a}
+        opacity={0.2}
+      />
+      
+      <PillarModel 
+        type={activePillar} 
+        isActive={true}
+        rotationSpeed={0.06}
+      />
+      
+      <PostProcessing 
+        intensity={1.0}
+        enableDOF={true}
+        enableSSAO={true}
+        enableBloom={true}
+        enableChromaticAberration={false}
+      />
     </Canvas>
   );
 }
 
 export default function Experience() {
+  const [activePillar, setActivePillar] = useState('tasting-menu');
+  const [hoveredPillar, setHoveredPillar] = useState(null);
+
+  const handlePillarHover = (pillarId) => {
+    setHoveredPillar(pillarId);
+    setActivePillar(pillarId);
+  };
+
   return (
     <section
       id="experience"
@@ -165,7 +357,7 @@ export default function Experience() {
           >
             {pillars.map((pillar, index) => (
               <motion.div
-                key={pillar.title}
+                key={pillar.id}
                 className="pillar-card"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -174,11 +366,16 @@ export default function Experience() {
                 style={{
                   marginBottom: '2.5rem',
                   paddingRight: '2rem',
+                  opacity: activePillar === pillar.id ? 1 : 0.5,
+                  transition: 'opacity 0.4s ease',
                 }}
+                onMouseEnter={() => handlePillarHover(pillar.id)}
+                onMouseLeave={() => setHoveredPillar(null)}
               >
                 <motion.div
                   className="pillar-icon"
                   whileHover={{ scale: 1.1, rotate: 5 }}
+                  whileTap={{ scale: 0.95 }}
                   transition={{ duration: 0.3 }}
                   style={{
                     fontSize: '2.5rem',
@@ -227,7 +424,15 @@ export default function Experience() {
               margin: '0 auto',
             }}
           >
-            <ExperienceCanvas />
+            <ExperienceCanvas activePillar={activePillar} />
+            <ExperienceCamera 
+              position={[0, 1, 6]} 
+              target={[0, 0, 0]}
+              fov={45}
+              enableControls={false}
+              enableAutoRotate={true}
+              autoRotateSpeed={0.2}
+            />
             <style jsx global>{`
               @keyframes pulse {
                 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }

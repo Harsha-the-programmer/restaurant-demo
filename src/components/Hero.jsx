@@ -1,173 +1,18 @@
-import { useRef, useEffect, useState } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Html } from '@react-three/drei';
-import * as THREE from 'three';
+import { useRef, useEffect, useState, Suspense } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { PostProcessing } from './PostProcessing';
+import { HeroEnvironment } from './Environment';
+import { HeroCamera } from './CameraRig';
+import { WineGlass } from './WineGlass';
+import { GoldParticles, AmbientDust } from './Particles';
+import { ContactShadows } from '@react-three/drei';
 import { motion } from 'framer-motion';
-
-const particlesCount = 200;
-const particlePositions = new Float32Array(particlesCount * 3);
-const particleSizes = new Float32Array(particlesCount);
-const particleAlphas = new Float32Array(particlesCount);
-
-for (let i = 0; i < particlesCount; i++) {
-  const radius = 5 + Math.random() * 10;
-  const theta = Math.random() * Math.PI * 2;
-  const phi = Math.acos(2 * Math.random() - 1);
-
-  particlePositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-  particlePositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
-  particlePositions[i * 3 + 2] = radius * Math.cos(phi);
-
-  particleSizes[i] = 0.02 + Math.random() * 0.05;
-  particleAlphas[i] = 0.3 + Math.random() * 0.7;
-}
-
-function Particles() {
-  const pointsRef = useRef();
-
-  useFrame((state, delta) => {
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y += delta * 0.02;
-      pointsRef.current.rotation.x += delta * 0.01;
-    }
-  });
-
-  return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" array={particlePositions} itemSize={3} />
-        <bufferAttribute attach="attributes-size" array={particleSizes} itemSize={1} />
-        <bufferAttribute attach="attributes-alpha" array={particleAlphas} itemSize={1} />
-      </bufferGeometry>
-      <shaderMaterial
-        vertexShader={`
-          attribute float size;
-          attribute float alpha;
-          varying float vAlpha;
-          void main() {
-            vAlpha = alpha;
-            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-            gl_PointSize = size * (300.0 / -mvPosition.z);
-            gl_Position = projectionMatrix * mvPosition;
-          }
-        `}
-        fragmentShader={`
-          varying float vAlpha;
-          uniform vec3 uColor;
-          void main() {
-            float dist = length(gl_PointCoord - vec2(0.5));
-            if (dist > 0.5) discard;
-            float alpha = 1.0 - smoothstep(0.0, 0.5, dist);
-            gl_FragColor = vec4(uColor, alpha * vAlpha);
-          }
-        `}
-        uniforms={{ uColor: { value: new THREE.Color(0xc9a84c) } }}
-        transparent
-        depthWrite={false}
-        blending={THREE.AdditiveBlending}
-      />
-    </points>
-  );
-}
-
-function WineGlass() {
-  const glassRef = useRef();
-  const { viewport } = useThree();
-
-  useFrame((state, delta) => {
-    if (glassRef.current) {
-      glassRef.current.rotation.y += delta * 0.15;
-      glassRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.5) * 0.1;
-    }
-  });
-
-  return (
-    <group ref={glassRef} scale={viewport.width < 768 ? 0.6 : 1}>
-      <group rotation={[-Math.PI / 2, 0, 0]}>
-        <mesh>
-          <cylinderGeometry args={[0.08, 0.08, 1.8, 32, 1, true]} />
-          <meshPhysicalMaterial
-            color={0xc9a84c}
-            metalness={0.3}
-            roughness={0.2}
-            transmission={0.9}
-            thickness={0.5}
-            ior={1.5}
-            transparent
-            opacity={0.3}
-          />
-        </mesh>
-        <mesh>
-          <sphereGeometry args={[0.45, 32, 32, 0, Math.PI * 2, 0, Math.PI / 1.8]} />
-          <meshPhysicalMaterial
-            color={0xc9a84c}
-            metalness={0.2}
-            roughness={0.1}
-            transmission={0.95}
-            thickness={0.8}
-            ior={1.5}
-            transparent
-            opacity={0.25}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-        <mesh>
-          <torusGeometry args={[0.45, 0.02, 16, 32]} />
-          <meshPhysicalMaterial
-            color={0xe8c97a}
-            metalness={0.8}
-            roughness={0.1}
-            emissive={0x8b6914}
-            emissiveIntensity={0.3}
-          />
-        </mesh>
-        <mesh>
-          <cylinderGeometry args={[0.025, 0.025, 0.4, 16, 1, true]} />
-          <meshPhysicalMaterial
-            color={0xc9a84c}
-            metalness={0.8}
-            roughness={0.1}
-            emissive={0x8b6914}
-            emissiveIntensity={0.5}
-          />
-        </mesh>
-        <mesh>
-          <cylinderGeometry args={[0.18, 0, 0.18, 0.03, 32]} />
-          <meshPhysicalMaterial
-            color={0xc9a84c}
-            metalness={0.8}
-            roughness={0.1}
-            emissive={0x8b6914}
-            emissiveIntensity={0.3}
-          />
-        </mesh>
-      </group>
-      <pointLight
-        position={[0, 1, 0]}
-        color={0xffd700}
-        intensity={2}
-        distance={5}
-        decay={2}
-      />
-    </group>
-  );
-}
-
-function AmbientLights() {
-  return (
-    <>
-      <ambientLight color={0x1a1a1a} intensity={0.5} />
-      <directionalLight position={[5, 10, 5]} color={0xfff8e7} intensity={1} />
-      <directionalLight position={[-5, 5, -5]} color={0xc9a84c} intensity={0.5} />
-      <hemisphereLight skyColor={0x2a2a1a} groundColor={0x1a1a1a} intensity={0.5} />
-    </>
-  );
-}
+import * as THREE from 'three';
 
 function HeroCanvas() {
   return (
     <Canvas
-      camera={{ position: [0, 0, 8], fov: 45 }}
+      camera={{ position: [0, 0.5, 8], fov: 35 }}
       style={{
         position: 'fixed',
         top: 0,
@@ -177,11 +22,56 @@ function HeroCanvas() {
         zIndex: -1,
         pointerEvents: 'none',
       }}
-      gl={{ antialias: true, alpha: true, preserveDrawingBuffer: false }}
+      gl={{ 
+        antialias: true, 
+        alpha: true, 
+        preserveDrawingBuffer: false,
+        powerPreference: 'high-performance',
+        logarithmicDepthBuffer: true,
+        stencil: false,
+      }}
+      shadows={{ 
+        type: THREE.PCFSoftShadowMap,
+        autoUpdate: false,
+        needsUpdate: true,
+      }}
+      toneMapping={THREE.ACESFilmicToneMapping}
+      toneMappingExposure={1.15}
+      colorSpace={THREE.SRGBColorSpace}
+      dpr={[1, 2]}
     >
-      <AmbientLights />
-      <Particles />
-      <WineGlass />
+      <Suspense fallback={null}>
+        <HeroEnvironment />
+      </Suspense>
+      
+      <ContactShadows 
+        opacity={0.3} 
+        scale={10} 
+        blur={2} 
+        far={10} 
+        position={[0, -0.5, 0]} 
+      />
+      
+      <HeroCamera position={[0, 0.5, 8]} target={[0, 0.5, 0]} focusDistance={8} />
+      
+      <AmbientDust count={1500} radius={25} color={0xe8c97a} opacity={0.25} />
+      <GoldParticles count={2500} radius={18} speed={0.015} size={0.035} color={0xc9a84c} opacity={0.5} />
+      
+      <WineGlass 
+        position={[0, -0.3, 0]} 
+        scale={1.2} 
+        rotationSpeed={0.12}
+        enableLiquid={true}
+        liquidLevel={0.65}
+      />
+      
+      <PostProcessing 
+        intensity={1.0} 
+        enableDOF={true} 
+        enableSSAO={true}
+        enableBloom={true}
+        enableChromaticAberration={false}
+      />
     </Canvas>
   );
 }
@@ -215,7 +105,7 @@ export default function Hero() {
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'radial-gradient(ellipse at center, transparent 40%, #0d0d0d 100%)',
+          background: 'radial-gradient(ellipse at center, transparent 30%, #0d0d0d 100%)',
           pointerEvents: 'none',
         }}
       />
