@@ -3,13 +3,87 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Aura - Fine Dining Restaurant Experience" />
-    <meta name="theme-color" content="#0a0a0a" />
-    <title>Aura | Fine Dining Experience</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=DM+Sans:opsz,wght@9..40,100..1000&display=swap" rel="stylesheet">
+    <meta name="description" content="Ember & Spice - Fine Dining Indian Cuisine in Hyderabad. Exquisite tasting menus, imported wines, live music, and farm-to-table sourcing in Banjara Hills." />
+    <meta name="keywords" content="fine dining, indian restaurant, hyderabad, banjara hills, tasting menu, wine pairing, farm to table, luxury dining" />
+    <meta name="theme-color" content="#0D0D0D" />
+    <meta name="color-scheme" content="dark" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emberandspice.com/" />
+    <meta property="og:title" content="Ember & Spice | Fine Dining Indian Cuisine in Hyderabad" />
+    <meta property="og:description" content="Where every meal becomes a memory. Exquisite Indian cuisine crafted with global techniques in the heart of Banjara Hills." />
+    <meta property="og:image" content="https://emberandspice.com/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Ember & Spice" />
+    <meta property="og:locale" content="en_IN" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://emberandspice.com/" />
+    <meta property="twitter:title" content="Ember & Spice | Fine Dining Indian Cuisine" />
+    <meta property="twitter:description" content="Exquisite Indian cuisine crafted with global techniques, served in an ambiance that speaks before we do." />
+    <meta property="twitter:image" content="https://emberandspice.com/og-image.jpg" />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "Ember & Spice",
+      "description": "Fine Dining Indian Cuisine in Hyderabad",
+      "url": "https://emberandspice.com",
+      "telephone": "+91-40-2345-6789",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Road No. 12, Banjara Hills",
+        "addressLocality": "Hyderabad",
+        "addressRegion": "Telangana",
+        "postalCode": "500034",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 17.4126,
+        "longitude": 78.4391
+      },
+      "priceRange": "$$$$",
+      "servesCuisine": "Indian",
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"],
+          "opens": "19:00",
+          "closes": "23:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Friday", "Saturday", "Sunday"],
+          "opens": "18:00",
+          "closes": "00:00"
+        }
+      ],
+      "hasMenu": "https://emberandspice.com/#menu",
+      "acceptsReservations": "True"
+    }
+    </script>
+
+    <!-- Performance Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://dl.polyhaven.org" crossorigin />
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+    <link rel="dns-prefetch" href="https://dl.polyhaven.org" />
+    
+    <!-- Fonts -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=DM+Sans:opsz,wght@9..40,100..1000&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=DM+Sans:opsz,wght@9..40,100..1000&display=swap" media="print" onload="this.media='all'" />
+    
+    <title>Ember & Spice | Fine Dining Indian Cuisine in Hyderabad</title>
   </head>
   <body>
     <div id="root"></div>

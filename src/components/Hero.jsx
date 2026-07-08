@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
-export default function Hero() {
+export default function Hero({ fallback = null }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -10,7 +10,9 @@ export default function Hero() {
   }, []);
 
   return (
-    <section
+    <>
+      {fallback}
+      <section
       id="home"
       className="hero"
       style={{
@@ -179,5 +181,6 @@ export default function Hero() {
         }
       `}</style>
     </section>
+  </>
   );
 }
