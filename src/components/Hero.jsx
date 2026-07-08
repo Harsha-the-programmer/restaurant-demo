@@ -2,10 +2,11 @@ import { useRef, useEffect, useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { PostProcessing } from './PostProcessing';
 import { HeroEnvironment } from './Environment';
-import { HeroCamera } from './CameraRig';
+import { HeroCamera, ScrollCamera } from './CameraRig';
 import { WineGlass } from './WineGlass';
 import { GoldParticles, AmbientDust } from './Particles';
 import { ContactShadows } from '@react-three/drei';
+import { Caustics, CausticsSpotlight } from './Caustics';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 
@@ -53,9 +54,30 @@ function HeroCanvas() {
       />
       
       <HeroCamera position={[0, 0.5, 8]} target={[0, 0.5, 0]} focusDistance={8} />
+      <ScrollCamera 
+        trigger="#home" 
+        startPosition={[0, 0.5, 8]} 
+        endPosition={[2, 1.5, 10]} 
+        startRotation={[0, 0, 0]} 
+        endRotation={[-0.1, -0.2, 0]} 
+        scrub={1} 
+      />
       
       <AmbientDust count={1500} radius={25} color={0xe8c97a} opacity={0.25} />
       <GoldParticles count={2500} radius={18} speed={0.015} size={0.035} color={0xc9a84c} opacity={0.5} />
+      
+      <Caustics 
+        position={[0, -0.4, -0.5]} 
+        scale={20} 
+        intensity={1.5} 
+        color={0xffd700} 
+      />
+      <CausticsSpotlight 
+        position={[0, -0.4, 0]} 
+        scale={18} 
+        intensity={1.2} 
+        color={0xffd700} 
+      />
       
       <WineGlass 
         position={[0, -0.3, 0]} 
