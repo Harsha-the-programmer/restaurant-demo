@@ -28,6 +28,11 @@ export function DeviceCapabilities() {
             const renderer = gl.getParameter(ext.UNMASKED_RENDERER_WEBGL);
             isLowEnd = /intel|integrated|basic|swiftshader|llvmpipe/i.test(renderer);
           }
+          // Use standard renderer parameter as fallback
+          if (!isLowEnd) {
+            const renderer = gl.getParameter(gl.RENDERER);
+            isLowEnd = /intel|integrated|basic|swiftshader|llvmpipe/i.test(renderer);
+          }
         }
       } catch {
         webgl2 = false;

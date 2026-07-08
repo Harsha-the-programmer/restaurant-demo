@@ -174,7 +174,7 @@ export default function Hero({ fallback = null }) {
         <span style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase' }}>Scroll</span>
       </motion.div>
 
-      <style jsx global>{`
+      <style>{`
         @keyframes shimmer {
           0% { background-position: 200% center; }
           100% { background-position: -200% center; }

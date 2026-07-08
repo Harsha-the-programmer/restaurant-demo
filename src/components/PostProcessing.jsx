@@ -5,7 +5,7 @@ import * as THREE from 'three';
 export function PostProcessing({ 
   intensity = 1.0, 
   enableDOF = true, 
-  enableSSAO = true,
+  enableSSAO = false,
   enableBloom = true,
   enableChromaticAberration = false 
 }) {
