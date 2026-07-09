@@ -18,7 +18,7 @@ export function PostProcessing({
   }), [intensity]);
 
   const toneMapping = useMemo(() => ({
-    mode: 'acesFilmic',
+    mode: ToneMapping.ACESFilmic,
     exposure: 1.15,
     resolution: 256,
   }), []);
