@@ -42,7 +42,7 @@ html {
 
 body {
   font-family: var(--font-body);
-  background-color: transparent;
+  background-color: var(--bg);
   color: var(--cream);
   line-height: 1.6;
   overflow-x: hidden;
