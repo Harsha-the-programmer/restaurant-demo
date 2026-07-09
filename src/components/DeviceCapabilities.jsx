@@ -62,7 +62,7 @@ export function DeviceCapabilities() {
   return (
     <div data-device-caps={JSON.stringify(caps)}>
       {caps.isLowEnd && (
-        <style jsx global>{`
+        <style dangerouslySetInnerHTML={{ __html: `
           .low-end * {
             animation-duration: 0.01ms !important;
             transition-duration: 0.01ms !important;
@@ -73,7 +73,7 @@ export function DeviceCapabilities() {
           .low-end .hero-fallback {
             display: block !important;
           }
-        `}</style>
+        `}} />
       )}
     </div>
   );

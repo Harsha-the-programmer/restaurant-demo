@@ -18,7 +18,7 @@ export function PostProcessing({
   }), [intensity]);
 
   const toneMapping = useMemo(() => ({
-    mode: ToneMapping.ACESFilmic,
+    mode: 'acesFilmic',
     exposure: 1.15,
     resolution: 256,
   }), []);
@@ -35,7 +35,7 @@ export function PostProcessing({
     minDistance: 0.005,
     maxDistance: 0.1,
     intensity: 2.5,
-    color: new THREE.Color(0x0a0a0a),
+    color: 0x0a0a0a,
     samples: 16,
     rings: 8,
   }), []);

@@ -222,7 +222,7 @@ export function GlobalCanvas() {
           colorSpace: THREE.SRGBColorSpace,
         }}
         shadows={{
-          type: THREE.PCFSoftShadowMap,
+          type: THREE.PCFShadowMap,
           autoUpdate: false,
           needsUpdate: true,
         }}
