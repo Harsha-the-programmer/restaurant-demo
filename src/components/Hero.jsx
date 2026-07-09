@@ -30,7 +30,7 @@ export default function Hero({ fallback = null }) {
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'radial-gradient(ellipse at center, transparent 30%, #0d0d0d 100%)',
+          background: 'transparent',
           pointerEvents: 'none',
         }}
       />
