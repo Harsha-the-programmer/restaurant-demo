@@ -23,16 +23,9 @@ export function DeviceCapabilities() {
         const gl = canvas.getContext('webgl2');
         webgl2 = !!gl;
         if (gl) {
-          const ext = gl.getExtension('WEBGL_debug_renderer_info');
-          if (ext) {
-            const renderer = gl.getParameter(ext.UNMASKED_RENDERER_WEBGL);
-            isLowEnd = /intel|integrated|basic|swiftshader|llvmpipe/i.test(renderer);
-          }
-          // Use standard renderer parameter as fallback
-          if (!isLowEnd) {
-            const renderer = gl.getParameter(gl.RENDERER);
-            isLowEnd = /intel|integrated|basic|swiftshader|llvmpipe/i.test(renderer);
-          }
+          // Use standard renderer parameter (WEBGL_debug_renderer_info is deprecated)
+          const renderer = gl.getParameter(gl.RENDERER);
+          isLowEnd = /intel|integrated|basic|swiftshader|llvmpipe/i.test(renderer);
         }
       } catch {
         webgl2 = false;

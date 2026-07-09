@@ -150,7 +150,7 @@ function GlobalScene() {
       {currentSection === 'experience' && <ExperienceContent activePillar={activePillar} />}
       {currentSection !== 'home' && currentSection !== 'experience' && <OtherContent />}
       
-      <PostProcessing intensity={1.0} enableDOF={true} enableSSAO={true} enableBloom={true} />
+      <PostProcessing intensity={1.0} enableDOF={true} enableSSAO={false} enableBloom={true} />
     </>
   );
 }
@@ -217,15 +217,15 @@ export function GlobalCanvas() {
           powerPreference: 'high-performance',
           logarithmicDepthBuffer: true,
           stencil: false,
+          toneMapping: THREE.ACESFilmicToneMapping,
+          toneMappingExposure: 1.15,
+          colorSpace: THREE.SRGBColorSpace,
         }}
         shadows={{
           type: THREE.PCFSoftShadowMap,
           autoUpdate: false,
           needsUpdate: true,
         }}
-        toneMapping={THREE.ACESFilmicToneMapping}
-        toneMappingExposure={1.15}
-        colorSpace={THREE.SRGBColorSpace}
         dpr={[1, 2]}
       >
         <Suspense fallback={null}>
