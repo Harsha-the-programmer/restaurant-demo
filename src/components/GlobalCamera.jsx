@@ -58,15 +58,15 @@ export function GlobalCamera() {
 
     const section = sectionCameras[currentSection] || sectionCameras.home;
     
-    targetPos.set(...section.pos);
-    targetTarget.set(...section.target);
+    targetPos.current.set(...section.pos);
+    targetTarget.current.set(...section.target);
 
     const lerpFactor = 1 - Math.exp(-delta * 3);
-    currentPos.lerp(targetPos, lerpFactor);
-    currentTarget.lerp(targetTarget, lerpFactor);
+    currentPos.current.lerp(targetPos.current, lerpFactor);
+    currentTarget.current.lerp(targetTarget.current, lerpFactor);
 
-    camera.position.copy(currentPos);
-    camera.lookAt(currentTarget);
+    camera.position.copy(currentPos.current);
+    camera.lookAt(currentTarget.current);
     camera.fov = THREE.MathUtils.lerp(camera.fov, section.fov, lerpFactor);
     camera.updateProjectionMatrix();
 
