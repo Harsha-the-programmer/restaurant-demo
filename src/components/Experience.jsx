@@ -173,7 +173,7 @@ export default function Experience() {
             >
               3D Content Rendered in Global Canvas
             </div>
-            <style jsx global>{`
+            <style>{`
               @keyframes pulse {
                 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
                 50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.1; }

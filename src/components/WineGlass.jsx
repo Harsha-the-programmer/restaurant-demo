@@ -90,7 +90,7 @@ export function WineGlass({
           />
         </mesh>
         <mesh castShadow receiveShadow>
-          <cylinderGeometry args={[0.2, 0, 0.2, 0.04, 64]} />
+          <cylinderGeometry args={[0.2, 0.001, 0.2, 0.04, 64]} />
           <meshPhysicalMaterial
             color={0xc9a84c}
             metalness={0.8}
