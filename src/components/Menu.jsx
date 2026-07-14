@@ -105,7 +105,7 @@ export default function Menu() {
       }}
     >
       <div className="container">
-        <div className="section-header reveal">
+        <div className="section-header">
           <span className="section-eyebrow">Our Signature Offerings</span>
           <h2 className="section-title">
             <span className="shimmer">Curated Menu</span>
@@ -178,7 +178,6 @@ export default function Menu() {
             {currentItems.map((item, index) => (
               <motion.article
                 key={item.name}
-                className="menu-card reveal"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}

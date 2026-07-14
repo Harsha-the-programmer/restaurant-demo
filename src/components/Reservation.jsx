@@ -105,7 +105,7 @@ export default function Reservation() {
       />
 
       <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-        <div className="section-header reveal">
+        <div className="section-header">
           <span className="section-eyebrow">Reserve Your Evening</span>
           <h2 className="section-title">
             <span className="shimmer">Book a Table</span>

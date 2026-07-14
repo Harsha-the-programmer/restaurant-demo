@@ -77,7 +77,7 @@ export default function Footer() {
           }}
         >
           <motion.div
-            className="footer-brand reveal"
+            className="footer-brand"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -160,7 +160,7 @@ export default function Footer() {
           </motion.div>
 
           <motion.nav
-            className="footer-nav reveal"
+            className="footer-nav"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -214,7 +214,7 @@ export default function Footer() {
           </motion.nav>
 
           <motion.div
-            className="footer-contact reveal"
+            className="footer-contact"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -245,7 +245,7 @@ export default function Footer() {
           </motion.div>
 
           <motion.div
-            className="footer-hours reveal"
+            className="footer-hours"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

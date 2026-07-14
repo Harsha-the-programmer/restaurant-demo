@@ -160,19 +160,6 @@ export default function Navbar() {
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-expanded={isMobileMenuOpen}
           aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-          style={{
-            display: 'none',
-            width: '40px',
-            height: '40px',
-            border: '1px solid var(--gold)',
-            borderRadius: '50%',
-            background: 'transparent',
-            color: 'var(--gold)',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            zIndex: 1001,
-          }}
         >
           {isMobileMenuOpen ? (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

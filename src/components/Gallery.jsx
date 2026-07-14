@@ -69,7 +69,7 @@ export default function Gallery() {
       }}
     >
       <div className="container">
-        <div className="section-header reveal">
+        <div className="section-header">
           <span className="section-eyebrow">A Glimpse Into Our World</span>
           <h2 className="section-title">
             <span className="shimmer">Gallery</span>
@@ -92,7 +92,7 @@ export default function Gallery() {
           {galleryItems.map((item, index) => (
             <motion.article
               key={item.label}
-              className="gallery-card reveal"
+              className="gallery-card"
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: '-50px' }}

@@ -29,7 +29,6 @@ export default function About() {
         >
           <div className="about-quote">
             <motion.blockquote
-              className="reveal"
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-100px' }}
@@ -50,7 +49,6 @@ export default function About() {
             </motion.blockquote>
 
             <motion.div
-              className="gold-divider reveal"
               initial={{ opacity: 0, scaleX: 0 }}
               whileInView={{ opacity: 1, scaleX: 1 }}
               viewport={{ once: true, margin: '-100px' }}
@@ -61,7 +59,6 @@ export default function About() {
 
           <div className="about-text">
             <motion.p
-              className="reveal"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
@@ -80,7 +77,6 @@ export default function About() {
             </motion.p>
 
             <motion.p
-              className="reveal"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-100px' }}
@@ -121,7 +117,6 @@ export default function About() {
           {stats.map((stat, index) => (
             <motion.div
               key={stat.value}
-              className="stat-card reveal"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
